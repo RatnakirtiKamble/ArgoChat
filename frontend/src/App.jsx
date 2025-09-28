@@ -1,3 +1,4 @@
+// new changes rename of the file
 import React, { useState } from 'react';
 import LandingPage from './pages/LandingPage.jsx';
 import ChatMap from './ChatMap.jsx';

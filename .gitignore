@@ -15,3 +15,7 @@ frontend/dist-ssr
 backend/.env
 backend/chroma_store/chroma.sqlite3
 backend/**/__pycache__/
+
+frontenda
+tiles
+test.py

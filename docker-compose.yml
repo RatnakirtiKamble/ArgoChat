@@ -1,0 +1,59 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: argo
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: argodb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+  chromadb:
+    image: chromadb/chroma:latest
+    environment:
+      CHROMA_DB_IMPL: duckdb+parquet
+      CHROMA_SERVER: "true"
+    ports:
+      - "8001:8001"
+    volumes:
+      - chroma_data:/chroma
+
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11435:11435"
+    volumes:
+      - ollama_data:/var/lib/ollama
+
+  backend:
+    build: ./backend
+    command: uvicorn server:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: "postgresql://argo:password@postgres:5432/argodb"
+      CHROMA_SERVER: "http://chromadb:8001"
+      OLLAMA_HOST: "http://ollama:11434"
+    depends_on:
+      - postgres
+      - chromadb
+      - ollama
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    volumes:
+      - ./data:/usr/share/nginx/html/tiles:ro
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+  chroma_data:
+  ollama_data:

@@ -15,7 +15,7 @@ DATABASE_URL = settings.ASYNC_DATABASE_URL
 engine = create_async_engine(DATABASE_URL, echo=True, future=True)
 
 AsyncSessionLocal = sessionmaker(
-    bind=engine,
+    engine,
     class_=AsyncSession,
     expire_on_commit=False,
     autoflush=False,

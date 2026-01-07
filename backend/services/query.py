@@ -65,7 +65,7 @@ async def query_service(user_prompt: str) -> str:
         is found.
     """
     torch.cuda.empty_cache()
-
+    print("User prompt:", user_prompt)
     system_prompt = """
     You are an assistant that answers questions about Argo ocean data by returning a SEQUENCE of function calls.
 
